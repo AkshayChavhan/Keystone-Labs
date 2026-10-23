@@ -160,6 +160,13 @@ export const fastMenuImages = [
   '/images/fast-menu7.png',
 ];
 
+// Promo reel, shown before the screenshots in the Fast Menu section.
+export const fastMenuVideo = {
+  src: '/videos/fast-menu-reel.mp4',
+  poster: '/videos/fast-menu-reel-poster.jpg',
+  label: 'Fast Menu product video: live menu edits, QR table tents and the owner dashboard',
+};
+
 export const projects: Project[] = [
   {
     id: 'fast-menu',

@@ -1,5 +1,5 @@
 import { ArrowUpRight } from 'lucide-react';
-import { fastMenuFeatures, fastMenuImages } from '@/lib/content';
+import { fastMenuFeatures, fastMenuImages, fastMenuVideo } from '@/lib/content';
 import { SITE, whatsappLink } from '@/lib/site';
 import { ButtonLink } from '@/components/ui/ButtonLink';
 import { ImageCarousel } from '@/components/ui/ImageCarousel';
@@ -61,6 +61,7 @@ export function FastMenu() {
               </div>
               <ImageCarousel
                 images={fastMenuImages}
+                video={fastMenuVideo}
                 alt="Fast Menu"
                 autoPlayMs={5000}
                 className="aspect-[16/10] bg-white"
