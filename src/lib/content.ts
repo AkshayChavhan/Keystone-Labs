@@ -252,6 +252,52 @@ export const projects: Project[] = [
     link: 'https://saakiebyknk.in',
   },
   {
+    id: 'ai-ambassador',
+    name: 'AI Ambassador',
+    subtitle: 'AI guest assistants for hospitality',
+    category: 'SaaS · AI',
+    summary: 'AI assistants that answer guests 24/7 and automate check-ins for hotels, rentals and venues.',
+    description:
+      'AI-powered platform for hotels, vacation rentals, event venues and nonprofits. Each sector gets its own assistant that answers guest and attendee questions around the clock on WhatsApp, automates check-ins and workflows, and coordinates vendors and tasks. It also offers dynamic pricing and demand forecasting, a unified analytics dashboard, GDPR-ready security, role-based access for multiple businesses, and integrations with PMS, booking engines, ticketing tools, CRMs and donation platforms.',
+    metrics: [
+      { label: 'Sectors', value: '4 industries' },
+      { label: 'Assistant', value: '24/7 on WhatsApp' },
+      { label: 'Access', value: 'Multi-business roles' },
+    ],
+    tech: ['Next.js', 'OpenAI', 'Prisma', 'MongoDB', 'Twilio'],
+    cover: '/images/ai-ambassador-1.webp',
+    images: [
+      '/images/ai-ambassador-1.webp',
+      '/images/ai-ambassador-2.webp',
+      '/images/ai-ambassador-3.webp',
+      '/images/ai-ambassador-4.webp',
+    ],
+    link: 'https://ai-ambassador-website.vercel.app/',
+  },
+  {
+    id: 'wa-campaigns',
+    name: 'WhatsApp Campaigns',
+    subtitle: 'WhatsApp marketing at scale',
+    category: 'SaaS · Messaging',
+    summary: 'A multi-tenant platform for sending, managing and tracking WhatsApp marketing campaigns.',
+    description:
+      'Multi-tenant SaaS for creating and running WhatsApp marketing campaigns at scale on the Twilio WhatsApp Business API. Businesses send bulk messages built from 500+ ready-made templates, handle replies in a shared inbox, embed chat widgets on their websites, and connect other systems through API keys and webhooks. Includes team and user access management, billing and an activity log for auditing. New workspaces start on a shared sender with free messages, then connect their own branded WhatsApp number.',
+    metrics: [
+      { label: 'Templates', value: '500+' },
+      { label: 'Messaging', value: 'Twilio WhatsApp' },
+      { label: 'Platform', value: 'Multi-tenant' },
+    ],
+    tech: ['Next.js', 'Twilio', 'WhatsApp Business API', 'Webhooks'],
+    cover: '/images/wa-campaigns-1.webp',
+    images: [
+      '/images/wa-campaigns-1.webp',
+      '/images/wa-campaigns-2.webp',
+      '/images/wa-campaigns-3.webp',
+      '/images/wa-campaigns-4.webp',
+    ],
+    link: 'https://www.wa-campaigns.com/',
+  },
+  {
     id: 'built-environment',
     name: 'BuiltEnvironment Studio',
     subtitle: 'Web & 3D for real estate',
