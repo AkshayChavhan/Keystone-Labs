@@ -244,7 +244,7 @@ export const projects: Project[] = [
       '/images/saakie10.png',
       '/images/saakie11.png',
     ],
-    link: 'https://saakie.vercel.app/',
+    link: 'https://saakiebyknk.in',
   },
   {
     id: 'built-environment',

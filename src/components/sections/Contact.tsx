@@ -121,7 +121,7 @@ export function Contact({ email = SITE.email, phoneDisplay = SITE.phoneDisplay }
           >
             <div className="grid gap-5 sm:grid-cols-2">
               <Field label="Your name" htmlFor="name">
-                <input id="name" name="name" required autoComplete="name" className={fieldClass} placeholder="Priya Sharma" />
+                <input id="name" name="name" required autoComplete="name" className={fieldClass} placeholder="Krutika Rathod" />
               </Field>
               <Field label="Email" htmlFor="email">
                 <input
