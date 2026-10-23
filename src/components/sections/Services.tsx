@@ -1,9 +1,9 @@
 import { Check } from 'lucide-react';
-import { extraServices, services } from '@/lib/content';
+import { extraServices, services, type Service } from '@/lib/content';
 import { Reveal } from '@/components/ui/Reveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 
-export function Services() {
+export function Services({ items = services, extras = extraServices }: { items?: Service[]; extras?: string[] } = {}) {
   return (
     <section id="services" className="scroll-mt-20 py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -14,7 +14,7 @@ export function Services() {
         />
 
         <div className="grid gap-5 md:grid-cols-2">
-          {services.map((service, i) => {
+          {items.map((service, i) => {
             const Icon = service.icon;
             return (
               <Reveal key={service.title} delay={i * 0.06}>
@@ -47,7 +47,7 @@ export function Services() {
 
         <Reveal className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-2xl border border-dashed border-line px-6 py-5 text-sm">
           <span className="font-semibold text-ink">Also available</span>
-          {extraServices.map((item) => (
+          {extras.map((item) => (
             <span key={item} className="flex items-center gap-2 text-body">
               <span className="h-1.5 w-1.5 rotate-45 bg-ember" aria-hidden="true" />
               {item}

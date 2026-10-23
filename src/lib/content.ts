@@ -114,7 +114,13 @@ export const processSteps = [
   },
 ];
 
-export const fastMenuFeatures: { title: string; description: string; icon: LucideIcon }[] = [
+export interface Feature {
+  title: string;
+  description: string;
+  icon: LucideIcon;
+}
+
+export const fastMenuFeatures: Feature[] = [
   {
     title: 'Scan at the table',
     description: 'Guests scan a QR code and see the menu instantly. No app to download.',

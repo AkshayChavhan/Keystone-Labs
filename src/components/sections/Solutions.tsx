@@ -1,9 +1,9 @@
 import { ArrowRight } from 'lucide-react';
-import { solutions } from '@/lib/content';
+import { solutions, type Solution } from '@/lib/content';
 import { Reveal } from '@/components/ui/Reveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 
-export function Solutions() {
+export function Solutions({ items = solutions }: { items?: Solution[] } = {}) {
   return (
     <section id="solutions" className="scroll-mt-20 border-t border-line py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -13,7 +13,7 @@ export function Solutions() {
           intro="These are systems we design and build to fit how you already work, not off-the-shelf templates."
         />
         <ul className="grid gap-px overflow-hidden rounded-3xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
-          {solutions.map((solution, i) => {
+          {items.map((solution, i) => {
             const Icon = solution.icon;
             return (
               <Reveal as="li" key={solution.title} delay={(i % 4) * 0.05} className="group bg-card p-7 transition-colors hover:bg-surface">

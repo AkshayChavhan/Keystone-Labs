@@ -19,8 +19,10 @@ const PRINCIPLES = [
   },
 ];
 
-export function About() {
-  const initials = SITE.founder.name
+type Founder = { name: string; role: string; linkedin: string; github: string };
+
+export function About({ founder = SITE.founder }: { founder?: Founder } = {}) {
+  const initials = founder.name
     .split(' ')
     .map((part) => part[0])
     .join('');
@@ -67,9 +69,9 @@ export function About() {
                 {initials}
               </span>
               <div>
-                <p className="font-display text-xl font-semibold text-ink">{SITE.founder.name}</p>
+                <p className="font-display text-xl font-semibold text-ink">{founder.name}</p>
                 <p className="text-sm text-muted">
-                  {SITE.founder.role}, {SITE.name}
+                  {founder.role}, {SITE.name}
                 </p>
               </div>
             </div>
@@ -80,19 +82,19 @@ export function About() {
             </p>
             <div className="mt-6 flex gap-3">
               <a
-                href={SITE.founder.linkedin}
+                href={founder.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`${SITE.founder.name} on LinkedIn`}
+                aria-label={`${founder.name} on LinkedIn`}
                 className="flex h-10 w-10 items-center justify-center rounded-xl border border-line text-body transition-colors hover:border-ember hover:text-ember-strong"
               >
                 <Linkedin className="h-[18px] w-[18px]" />
               </a>
               <a
-                href={SITE.founder.github}
+                href={founder.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`${SITE.founder.name} on GitHub`}
+                aria-label={`${founder.name} on GitHub`}
                 className="flex h-10 w-10 items-center justify-center rounded-xl border border-line text-body transition-colors hover:border-ember hover:text-ember-strong"
               >
                 <Github className="h-[18px] w-[18px]" />

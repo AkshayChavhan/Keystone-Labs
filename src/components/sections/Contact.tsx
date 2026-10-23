@@ -53,7 +53,7 @@ function ContactOption({
   );
 }
 
-export function Contact() {
+export function Contact({ email = SITE.email, phoneDisplay = SITE.phoneDisplay }: { email?: string; phoneDisplay?: string } = {}) {
   const [status, setStatus] = useState<Status>('idle');
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -95,7 +95,7 @@ export function Contact() {
               external
               icon={<WhatsAppIcon className="h-6 w-6 text-[#25D366]" />}
               title="Chat on WhatsApp"
-              detail={SITE.phoneDisplay}
+              detail={phoneDisplay}
             />
             <ContactOption
               href={bookingLink()}
@@ -105,10 +105,10 @@ export function Contact() {
               detail="Free, no obligation"
             />
             <ContactOption
-              href={`mailto:${SITE.email}`}
+              href={`mailto:${email}`}
               icon={<Mail className="h-6 w-6 text-teal" />}
               title="Email us"
-              detail={SITE.email}
+              detail={email}
             />
           </Reveal>
         </div>

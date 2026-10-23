@@ -1,5 +1,5 @@
 import { ArrowUpRight } from 'lucide-react';
-import { insights } from '@/lib/content';
+import { insights, type Insight } from '@/lib/content';
 import { SITE } from '@/lib/site';
 import { LogoMark } from '@/components/brand/Logo';
 import { Reveal } from '@/components/ui/Reveal';
@@ -7,7 +7,7 @@ import { SectionHeading } from '@/components/ui/SectionHeading';
 
 const dateFormat = new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 
-export function Insights() {
+export function Insights({ items = insights, author = SITE.founder.name }: { items?: Insight[]; author?: string } = {}) {
   return (
     <section id="insights" className="scroll-mt-20 py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -17,7 +17,7 @@ export function Insights() {
           intro="What we learn building AI products, written up for business owners and engineers alike."
         />
         <ul className="grid gap-6 md:grid-cols-2">
-          {insights.map((post, i) => (
+          {items.map((post, i) => (
             <Reveal as="li" key={post.url} delay={i * 0.08}>
               <a
                 href={post.url}
@@ -37,7 +37,7 @@ export function Insights() {
                 <div className="relative mt-auto flex items-center justify-between gap-4 pt-8">
                   <p className="text-xs text-muted">
                     <time dateTime={post.date}>{dateFormat.format(new Date(post.date))}</time> · {post.readTime} ·{' '}
-                    {SITE.founder.name}
+                    {author}
                   </p>
                   <span className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-ember-strong">
                     Read

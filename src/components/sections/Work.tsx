@@ -37,7 +37,7 @@ function Cover({ project }: { project: Project }) {
   );
 }
 
-export function Work() {
+export function Work({ items = projects }: { items?: Project[] } = {}) {
   const [active, setActive] = useState<Project | null>(null);
   const close = useCallback(() => setActive(null), []);
 
@@ -51,7 +51,7 @@ export function Work() {
         />
 
         <ul className="grid gap-x-6 gap-y-12 md:grid-cols-2">
-          {projects.map((project, i) => (
+          {items.map((project, i) => (
             <Reveal as="li" key={project.id} delay={(i % 2) * 0.08}>
               <button
                 type="button"

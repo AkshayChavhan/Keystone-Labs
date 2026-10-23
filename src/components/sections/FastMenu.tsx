@@ -1,14 +1,21 @@
 import { ArrowUpRight } from 'lucide-react';
-import { fastMenuFeatures, fastMenuImages, fastMenuVideo } from '@/lib/content';
+import { fastMenuFeatures, fastMenuImages, fastMenuVideo, type Feature } from '@/lib/content';
 import { SITE, whatsappLink } from '@/lib/site';
 import { ButtonLink } from '@/components/ui/ButtonLink';
-import { ImageCarousel } from '@/components/ui/ImageCarousel';
+import { ImageCarousel, type CarouselVideo } from '@/components/ui/ImageCarousel';
 import { Reveal } from '@/components/ui/Reveal';
 import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
 
 const VENUES = ['Hotels', 'Restaurants', 'Cafés', 'Bars'];
 
-export function FastMenu() {
+interface FastMenuProps {
+  features?: Feature[];
+  images?: string[];
+  /** null hides the video slide. */
+  video?: CarouselVideo | null;
+}
+
+export function FastMenu({ features = fastMenuFeatures, images = fastMenuImages, video = fastMenuVideo }: FastMenuProps = {}) {
   return (
     // The "dark" class keeps this band dark in both themes, so the product stands apart.
     <section id="fast-menu" className="dark relative scroll-mt-16 overflow-hidden bg-surface py-20 text-body sm:py-28">
@@ -60,8 +67,8 @@ export function FastMenu() {
                 </span>
               </div>
               <ImageCarousel
-                images={fastMenuImages}
-                video={fastMenuVideo}
+                images={images}
+                video={video ?? undefined}
                 alt="Fast Menu"
                 autoPlayMs={5000}
                 className="aspect-[16/10] bg-white"
@@ -71,7 +78,7 @@ export function FastMenu() {
 
           <Reveal delay={0.1} className="lg:col-span-5">
             <ul className="divide-y divide-line">
-              {fastMenuFeatures.map((feature) => {
+              {features.map((feature) => {
                 const Icon = feature.icon;
                 return (
                   <li key={feature.title} className="flex gap-4 py-4 first:pt-0">
