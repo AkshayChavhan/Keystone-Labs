@@ -53,9 +53,14 @@ export interface Solution {
 export interface Insight {
   title: string;
   excerpt: string;
-  date: string;
+  /** YYYY-MM-DD. Day-first dates like 04-06-2026 are rejected at build time. */
+  date: `${number}-${number}-${number}`;
   readTime: string;
   url: string;
+  /** Topic pill, e.g. 'AI'. */
+  category: string;
+  /** Where it's published, e.g. 'Medium'. */
+  source: string;
 }
 
 export const services: Service[] = [
@@ -415,6 +420,8 @@ export const insights: Insight[] = [
       'A practical look at multi-LLM architecture: what it means, why it saves money, and how it makes AI features more reliable.',
     date: '2026-06-04',
     readTime: '4 min read',
+    category: 'AI',
+    source: 'Medium',
     url: 'https://medium.com/@akshaychavhan676/how-i-built-one-ai-platform-that-talks-to-openai-claude-gemini-and-groq-and-why-your-business-9b66870263b7',
   },
   {
@@ -423,6 +430,8 @@ export const insights: Insight[] = [
       'Token cost is the silent killer of AI features. How we made an AI platform much cheaper to run — with code, trade-offs and what actually worked.',
     date: '2026-06-04',
     readTime: '5 min read',
+    category: 'AI',
+    source: 'Medium',
     url: 'https://medium.com/@akshaychavhan676/stop-burning-money-on-ai-tokens-8-techniques-that-cut-our-llm-bill-without-hurting-quality-b6611e07a1af',
   },
 ];

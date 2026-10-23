@@ -38,7 +38,7 @@ export function Footer() {
             <li>
               <a href={`mailto:${SITE.email}`} className="flex items-center gap-2.5 text-body hover:text-ink">
                 <Mail className="h-4 w-4 shrink-0 text-muted" />
-                <span className="break-all">{SITE.email}</span>
+                <span className="min-w-0 wrap-anywhere">{SITE.email}</span>
               </a>
             </li>
             <li>

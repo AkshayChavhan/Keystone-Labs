@@ -220,6 +220,8 @@ const worstInsights: Insight[] = [
     date: '2026-09-18',
     readTime: '14 min read',
     url: 'https://example.com/posts/printed-menu-cost',
+    category: 'Restaurants',
+    source: 'Keystone blog',
   },
   ...insights,
 ];

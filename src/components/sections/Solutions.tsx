@@ -3,7 +3,22 @@ import { solutions, type Solution } from '@/lib/content';
 import { Reveal } from '@/components/ui/Reveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 
+// The grid draws its dividers with the gap colour, so empty cells in the last row would show as a
+// solid block. Blank filler cells complete the row: up to 3 at four columns, 1 at two columns.
+function fillers(count: number) {
+  const atLg = (4 - (count % 4)) % 4;
+  const atSm = (2 - (count % 2)) % 2;
+  return Array.from({ length: atLg }, (_, i) => (
+    <li
+      key={`filler-${i}`}
+      aria-hidden="true"
+      className={`hidden bg-card ${i < atSm ? 'sm:block' : 'sm:hidden'} lg:block`}
+    />
+  ));
+}
+
 export function Solutions({ items = solutions }: { items?: Solution[] } = {}) {
+  if (items.length === 0) return null;
   return (
     <section id="solutions" className="scroll-mt-20 border-t border-line py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -23,6 +38,7 @@ export function Solutions({ items = solutions }: { items?: Solution[] } = {}) {
               </Reveal>
             );
           })}
+          {fillers(items.length)}
         </ul>
         <Reveal className="mt-8 flex flex-col items-start justify-between gap-4 rounded-2xl bg-ink px-7 py-6 text-canvas sm:flex-row sm:items-center">
           <p className="font-display text-lg font-medium">Need something that isn&apos;t on the list?</p>

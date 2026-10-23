@@ -14,7 +14,7 @@ export function Process() {
         <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {processSteps.map((step, i) => (
             <Reveal as="li" key={step.title} delay={i * 0.08} className="relative h-full rounded-3xl border border-line bg-card p-7">
-                <span className="font-display text-5xl font-semibold text-ember/80">0{i + 1}</span>
+                <span className="font-display text-5xl font-semibold text-ember/80">{String(i + 1).padStart(2, '0')}</span>
                 <h3 className="mt-5 font-display text-xl font-semibold text-ink">{step.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{step.description}</p>
             </Reveal>

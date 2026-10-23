@@ -1,10 +1,10 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
 import { AnimatePresence, motion, useReducedMotion, type Transition, type Variants } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { EASE_OUT } from '@/lib/motion';
+import { SafeImage } from './SafeImage';
 
 // What caused the last slide change. Autoplay gets a proper crossfade; clicks are quick so rapid
 // clicking never stacks half-faded screens; arrow keys are instant.
@@ -23,6 +23,13 @@ const SLIDE: Variants = {
   show: (via: Via) => ({ opacity: 1, filter: 'blur(0px)', transition: FADE[via] }),
   leave: (via: Via) => ({ opacity: 0, filter: 'blur(2px)', transition: FADE[via] }),
 };
+
+// idle: not started yet. blocked: autoplay was refused (e.g. iOS Low Power Mode) or no frames
+// arrived within START_TIMEOUT_MS, so the poster gets a normal slide's time.
+// failed: the file didn't load, so the slide is dropped.
+type VideoState = 'idle' | 'playing' | 'paused' | 'ended' | 'blocked' | 'failed';
+
+const START_TIMEOUT_MS = 3000;
 
 export interface CarouselVideo {
   src: string;
@@ -46,26 +53,57 @@ interface ImageCarouselProps {
 const CONTROL =
   'flex items-center justify-center rounded-full bg-black/55 text-white backdrop-blur transition-[opacity,background-color,scale] duration-150 ease-out hover:bg-black/70 active:scale-[0.97]';
 
-function VideoSlide({ video, autoPlay, onEnded }: { video: CarouselVideo; autoPlay: boolean; onEnded: () => void }) {
+function VideoSlide({
+  video,
+  autoPlay,
+  onState,
+}: {
+  video: CarouselVideo;
+  autoPlay: boolean;
+  onState: (state: VideoState) => void;
+}) {
   const ref = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
   // Set when the viewer presses pause, so scrolling back into view doesn't restart it.
   const userPaused = useRef(false);
+  // Set once frames are actually showing (the `playing` event), not just when play was requested.
+  const started = useRef(false);
 
   // Play only while at least half the video is on screen, to save data and battery.
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    // The file can fail before React attaches onError (the server-rendered <video> starts loading
+    // first), so check for an earlier failure here too.
+    if (el.error) {
+      onState('failed');
+      return;
+    }
+    let startTimer: number | undefined;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && autoPlay && !userPaused.current) el.play().catch(() => {});
-        else el.pause();
+        window.clearTimeout(startTimer);
+        if (entry.isIntersecting && autoPlay && !userPaused.current) {
+          el.play().catch((err: unknown) => {
+            // A missing file also rejects here, but the error event reports that one.
+            if (err instanceof DOMException && err.name === 'NotAllowedError') onState('blocked');
+          });
+          // A stalled download never errors and never plays. Don't wait on it forever.
+          if (!started.current) {
+            startTimer = window.setTimeout(() => {
+              if (!started.current) onState('blocked');
+            }, START_TIMEOUT_MS);
+          }
+        } else el.pause();
       },
       { threshold: 0.5 },
     );
     observer.observe(el);
-    return () => observer.disconnect();
-  }, [autoPlay]);
+    return () => {
+      window.clearTimeout(startTimer);
+      observer.disconnect();
+    };
+  }, [autoPlay, onState]);
 
   const toggle = () => {
     const el = ref.current;
@@ -86,8 +124,16 @@ function VideoSlide({ video, autoPlay, onEnded }: { video: CarouselVideo; autoPl
         preload="metadata"
         aria-label={video.label}
         onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
-        onEnded={onEnded}
+        onPlaying={() => {
+          started.current = true;
+          onState('playing');
+        }}
+        onPause={() => {
+          setPlaying(false);
+          onState('paused');
+        }}
+        onEnded={() => onState('ended')}
+        onError={() => onState('failed')}
         className="h-full w-full object-cover"
       />
       <button
@@ -114,30 +160,38 @@ export function ImageCarousel({
 }: ImageCarouselProps) {
   const [slide, setSlide] = useState<{ index: number; via: Via }>({ index: 0, via: 'auto' });
   const [paused, setPaused] = useState(false);
-  const [videoDone, setVideoDone] = useState(false);
+  const [videoState, setVideoState] = useState<VideoState>('idle');
+  // A failed video also fires `pause` right after `error`, so failed is final.
+  const onVideoState = useCallback((next: VideoState) => setVideoState((v) => (v === 'failed' ? v : next)), []);
   const reduce = useReducedMotion();
-  const slides = video ? [video.src, ...images] : images;
+  const hasVideo = !!video && videoState !== 'failed';
+  const slides = hasVideo ? [video.src, ...images] : images;
   const count = slides.length;
   const { index, via } = slide;
-  const onVideo = !!video && index === 0;
-  const firstImage = video ? 1 : 0;
+  const onVideo = hasVideo && index === 0;
+  const firstImage = hasVideo ? 1 : 0;
 
   const go = useCallback(
     (step: number, how: Via) => {
-      setVideoDone(false);
+      setVideoState((v) => (v === 'failed' ? v : 'idle'));
       setSlide((s) => ({ index: (s.index + step + count) % count, via: how }));
     },
     [count],
   );
 
   // One timer per slide, so a manual change gives the new slide its full time.
-  // The video slide moves on shortly after it ends rather than on the timer.
+  // The video moves on shortly after it ends. If autoplay is blocked, its poster gets the normal
+  // slide time. While it plays, or after the viewer pauses it, the carousel waits.
   useEffect(() => {
     if (!autoPlayMs || paused || reduce || count < 2) return;
-    if (onVideo && !videoDone) return;
-    const id = window.setTimeout(() => go(1, 'auto'), onVideo ? 600 : autoPlayMs);
+    let delay = autoPlayMs;
+    if (onVideo) {
+      if (videoState === 'ended') delay = 600;
+      else if (videoState !== 'blocked') return;
+    }
+    const id = window.setTimeout(() => go(1, 'auto'), delay);
     return () => window.clearTimeout(id);
-  }, [autoPlayMs, paused, reduce, count, go, index, onVideo, videoDone]);
+  }, [autoPlayMs, paused, reduce, count, go, index, onVideo, videoState]);
 
   useEffect(() => {
     if (!keyboard || count < 2) return;
@@ -174,9 +228,9 @@ export function ImageCarousel({
           exit="leave"
         >
           {onVideo && video ? (
-            <VideoSlide video={video} autoPlay={!reduce} onEnded={() => setVideoDone(true)} />
+            <VideoSlide video={video} autoPlay={!reduce} onState={onVideoState} />
           ) : (
-            <Image
+            <SafeImage
               src={slides[index]}
               alt={`${alt} — screen ${index - firstImage + 1} of ${images.length}`}
               fill
@@ -202,7 +256,7 @@ export function ImageCarousel({
                 key={src}
                 type="button"
                 onClick={() => {
-                  setVideoDone(false);
+                  setVideoState((v) => (v === 'failed' ? v : 'idle'));
                   setSlide({ index: i, via: 'click' });
                 }}
                 aria-label={i < firstImage ? 'Show video' : `Show screen ${i - firstImage + 1}`}

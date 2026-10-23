@@ -1,11 +1,12 @@
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { projects } from '@/lib/content';
 import { SITE, whatsappLink } from '@/lib/site';
 import { ButtonLink } from '@/components/ui/ButtonLink';
 import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
 import { HeroArch } from './HeroArch';
 
 const STATS = [
-  { value: '8', label: 'Products built' },
+  { value: String(projects.length), label: projects.length === 1 ? 'Product built' : 'Products built' },
   { value: '5+ yrs', label: 'Shipping production software' },
   { value: 'IN + Global', label: 'Remote-friendly studio' },
 ];

@@ -16,6 +16,11 @@ interface FastMenuProps {
 }
 
 export function FastMenu({ features = fastMenuFeatures, images = fastMenuImages, video = fastMenuVideo }: FastMenuProps = {}) {
+  const hasMedia = images.length > 0 || !!video;
+  const hasFeatures = features.length > 0;
+  // With only one of the two, it takes the full width.
+  const mediaSpan = hasFeatures ? 'lg:col-span-7' : 'lg:col-span-12';
+  const featureSpan = hasMedia ? 'lg:col-span-5' : 'lg:col-span-12 lg:max-w-3xl';
   return (
     // The "dark" class keeps this band dark in both themes, so the product stands apart.
     <section id="fast-menu" className="dark relative scroll-mt-16 overflow-hidden bg-surface py-20 text-body sm:py-28">
@@ -56,44 +61,48 @@ export function FastMenu({ features = fastMenuFeatures, images = fastMenuImages,
         </div>
 
         <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
-          <Reveal className="lg:col-span-7">
-            <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-2xl shadow-black/40">
-              <div className="flex items-center gap-2 border-b border-line px-4 py-3">
-                <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
-                <span className="ml-3 truncate rounded-md bg-surface px-3 py-1 text-xs text-muted">
-                  fast-menu-zeta.vercel.app
-                </span>
+          {hasMedia && (
+            <Reveal className={mediaSpan}>
+              <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-2xl shadow-black/40">
+                <div className="flex items-center gap-2 border-b border-line px-4 py-3">
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
+                  <span className="ml-3 truncate rounded-md bg-surface px-3 py-1 text-xs text-muted">
+                    fast-menu-zeta.vercel.app
+                  </span>
+                </div>
+                <ImageCarousel
+                  images={images}
+                  video={video ?? undefined}
+                  alt="Fast Menu"
+                  autoPlayMs={5000}
+                  className="aspect-[16/10] bg-white"
+                />
               </div>
-              <ImageCarousel
-                images={images}
-                video={video ?? undefined}
-                alt="Fast Menu"
-                autoPlayMs={5000}
-                className="aspect-[16/10] bg-white"
-              />
-            </div>
-          </Reveal>
+            </Reveal>
+          )}
 
-          <Reveal delay={0.1} className="lg:col-span-5">
-            <ul className="divide-y divide-line">
-              {features.map((feature) => {
-                const Icon = feature.icon;
-                return (
-                  <li key={feature.title} className="flex gap-4 py-4 first:pt-0">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-ember-soft text-ember">
-                      <Icon className="h-5 w-5" />
-                    </span>
-                    <div>
-                      <h3 className="font-semibold text-ink">{feature.title}</h3>
-                      <p className="mt-0.5 text-sm leading-relaxed text-muted">{feature.description}</p>
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          </Reveal>
+          {hasFeatures && (
+            <Reveal delay={0.1} className={featureSpan}>
+              <ul className="divide-y divide-line">
+                {features.map((feature) => {
+                  const Icon = feature.icon;
+                  return (
+                    <li key={feature.title} className="flex gap-4 py-4 first:pt-0">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-ember-soft text-ember">
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      <div>
+                        <h3 className="font-semibold text-ink">{feature.title}</h3>
+                        <p className="mt-0.5 text-sm leading-relaxed text-muted">{feature.description}</p>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </Reveal>
+          )}
         </div>
 
         <Reveal className="mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-3 border-t border-line pt-8">

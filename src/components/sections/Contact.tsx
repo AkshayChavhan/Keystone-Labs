@@ -47,7 +47,7 @@ function ContactOption({
       <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-surface text-ink">{icon}</span>
       <span className="min-w-0">
         <span className="block font-semibold text-ink">{title}</span>
-        <span className="block truncate text-sm text-muted">{detail}</span>
+        <span className="block text-sm text-muted wrap-anywhere">{detail}</span>
       </span>
     </a>
   );
@@ -82,7 +82,7 @@ export function Contact({ email = SITE.email, phoneDisplay = SITE.phoneDisplay }
 
   return (
     <section id="contact" className="scroll-mt-20 border-t border-line py-20 sm:py-28">
-      <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1.25fr] lg:gap-16">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] lg:gap-16">
         <div>
           <SectionHeading
             eyebrow="Start a project"

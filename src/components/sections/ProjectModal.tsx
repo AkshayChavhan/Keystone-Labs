@@ -105,20 +105,24 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
           className="aspect-[16/10] max-h-[60vh] bg-surface"
         />
 
-        <div className="grid gap-8 p-6 sm:p-10 lg:grid-cols-[1.6fr_1fr]">
+        {/* Without images the close button sits over the content, so the text starts below it. */}
+        <div
+          className={`grid grid-cols-1 gap-8 p-6 sm:p-10 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] ${project.images.length === 0 ? 'pt-16 sm:pt-16' : ''}`}
+        >
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ember-strong">{project.category}</p>
-            <h3 id={titleId} className="mt-2 font-display text-3xl font-semibold tracking-tight text-ink">
+            <h3 id={titleId} className="mt-2 font-display text-3xl font-semibold tracking-tight text-ink wrap-anywhere">
               {project.name}
             </h3>
-            <p className="mt-1 text-lg text-muted">{project.subtitle}</p>
+            {project.subtitle.trim() && <p className="mt-1 text-lg text-muted">{project.subtitle}</p>}
             <p className="mt-5 leading-relaxed text-body">{project.description}</p>
           </div>
 
           <div className="space-y-6">
-            <dl className="grid grid-cols-3 gap-3 lg:grid-cols-1">
+            <dl className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-1">
               {project.metrics.map((metric) => (
-                <div key={metric.label} className="rounded-2xl bg-surface p-4">
+                // On phones an odd last stat spans both columns instead of sitting alone.
+                <div key={metric.label} className="rounded-2xl bg-surface p-4 last:odd:col-span-2 sm:last:odd:col-span-1">
                   <dt className="text-xs uppercase tracking-wider text-muted">{metric.label}</dt>
                   <dd className="mt-1 font-semibold text-ink">{metric.value}</dd>
                 </div>
